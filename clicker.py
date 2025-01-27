@@ -9,23 +9,24 @@ from PIL import ImageGrab
 click = False
 running = True
 mouse = MouseController()
-ToggleKey = KeyCode(char='q')
-ExitKey = KeyCode(char='e')
+TOGGLEKEY = KeyCode(char='s')
+EXITKEY = KeyCode(char='q')
 
-#def GoldenCookie():
-#    while running:
-#        screenshot = np.array(ImageGrab.grab())
-#        objectImage = cv2.imread('GoldenCookie.png')
-#
-#        result = cv2.matchTemplate(screenshot, objectImage, cv2.TM_CCOEFF_NORMED)
-#        threshold = 0.8
-#        locations = np.where(result >= threshold)
-#
-#        for point in zip(*locations[::-1]):
-#            mouse.position = point
-#            mouse.click(Button.left, 1)
 
-def Clicker():
+def click_golden_cookie():
+    while running:
+        screenshot = np.array(ImageGrab.grab())
+        objectImage = cv2.imread('GoldenCookie.png')
+
+        result = cv2.matchTemplate(screenshot, objectImage, cv2.TM_CCOEFF_NORMED)
+        threshold = 0.8
+        locations = np.where(result >= threshold)
+
+        for point in zip(*locations[::-1]):
+            mouse.position = point
+            mouse.click(Button.left, 1)
+
+def clicker():
     loopTime = time.time()
 
     while running:
@@ -40,19 +41,19 @@ def Clicker():
         loopTime = currentTime
 
 
-def ToggleEvent(key):
+def toggle_event(key):
     global click, running
-    if key == ToggleKey:
+    if key == TOGGLEKEY:
         click = not click
-    elif key == ExitKey:
+    elif key == EXITKEY:
         running = False
 
 
-clickingThread = threading.Thread(target=Clicker)
+clickingThread = threading.Thread(target=clicker)
 clickingThread.start()
 #goldenCookieThread = threading.Thread(target=GoldenCookie)
 #goldenCookieThread.start()
-listener = Listener(on_press=ToggleEvent)
+listener = Listener(on_press=toggle_event)
 listener.start()
 listener.join()
 clickingThread.join()
